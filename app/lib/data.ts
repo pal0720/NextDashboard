@@ -1,4 +1,5 @@
 import { sql } from '@vercel/postgres';
+import unstable_noStore from 'next/cache'
 import {
   CustomerField,
   CustomersTableType,
@@ -10,6 +11,7 @@ import {
 } from './definitions';
 import { formatCurrency } from './utils';
 
+
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
@@ -18,12 +20,12 @@ export async function fetchRevenue() {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
 
-    // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+    console.log('Fetching revenue data...');
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await sql<Revenue>`SELECT * FROM revenue`;
 
-    // console.log('Data fetch completed after 3 seconds.');
+    console.log('Data fetch completed after 3 seconds.');
 
     return data.rows;
   } catch (error) {
@@ -41,6 +43,9 @@ export async function fetchLatestInvoices() {
       ORDER BY invoices.date DESC
       LIMIT 5`;
 
+    console.log('Fetching revenue data...');
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
     const latestInvoices = data.rows.map((invoice) => ({
       ...invoice,
       amount: formatCurrency(invoice.amount),
@@ -54,6 +59,8 @@ export async function fetchLatestInvoices() {
 
 export async function fetchCardData() {
   try {
+    console.log('Fetching card data...');
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
